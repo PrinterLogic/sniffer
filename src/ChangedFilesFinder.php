@@ -30,7 +30,7 @@ class ChangedFilesFinder
 			foreach (explode("\n", `$xx`) as $row) {
 				preg_match("#^[a-z0-9]{40}\s(\d+)\s(\d+)#", $row, $match);
 
-				if (is_null($match[1]) === false) {
+				if (isset($match[1])) {
 					$file->markLineAsChanged($match[1]);
 				}
 
