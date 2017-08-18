@@ -34,7 +34,7 @@ class ChangedFilesFinder
 					$file->markLineAsChanged($match[1]);
 				}
 
-				if (is_null($match[2]) === false) {
+				if (isset($match[2])) {
 					$file->markLineAsChanged($match[2]);
 				}
 			}
