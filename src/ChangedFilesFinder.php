@@ -12,9 +12,39 @@ class ChangedFilesFinder
 
 	public function findAll($commitSHA)
 	{
-		$listFilesCommand = "cd %s && git diff -M --name-only %s^ %s";
-		$parsedCommand = sprintf($listFilesCommand, $this->basePath, $commitSHA, $commitSHA);
-		$changedFilesList = array_filter(explode("\n", `$parsedCommand`), function($item) { return strlen($item) > 0; });
+        $commands = [
+            'added' => 'cd %s && git ls-files -o  --exclude-standard --full-name',
+            'modified' => 'cd %s && git ls-files -m',
+        ];
+
+        $changedFilesList = [];
+        foreach ($commands as $type => $command) {
+            $parsedCommand = sprintf($command, $this->basePath);
+            $changedFiles = array_filter(explode("\n", `$parsedCommand`), function($item) { return strlen($item) > 0; });
+            foreach ($changedFiles as $file) {
+                $lines = 0;
+                if ('added' == $type) {
+                    $lines = count(file($this->basePath . $file));
+                } else if ('modified' == $type) {
+                    $lines = "cd %s && git blame test.php | grep -n '^0\{8\} ' | cut -f1 -d:";
+                }
+                //dump($lines);
+
+                $lineNumbers = [];
+                for ($i = 0; $i < $lines; $i++) {
+                    //dump($i + 0);
+                    $lineNumbers[] = $i + 0;
+                }
+                //dump($lineNumbers);
+
+                $changedFilesList[$file] = $lineNumbers;
+            }
+        }
+        dump($changedFilesList);
+
+        die();
+        //die;
+
 		$changedLineNumbers = "cd %s && git blame -p %s -- %s | grep %s";
 
 		$filesCollection = [];

@@ -6,7 +6,7 @@ class Sniffer
 	private $standardFile;
 	private $basePath;
 
-	public function construct($basePath, $standardFile)
+	public function __construct($basePath, $standardFile)
 	{
 		$this->basePath = $basePath;
 		$this->standardFile = $standardFile;

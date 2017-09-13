@@ -6,9 +6,11 @@ $path = __DIR__."/../../../../";
 $exit = 0;
 
 $commitSHA = substr(`cd $path && git rev-parse HEAD`, 0, 8);
+dump($commitSHA);
 
 $finder = new Ayeo\Sniffer\ChangedFilesFinder($path);
 $files = $finder->findAll($commitSHA);
+dump($files);
 
 $sniffer = new \Ayeo\Sniffer\Sniffer($path."/phpcs.xml");
 
@@ -19,6 +21,8 @@ foreach ($files as $file) {
 
     /* @var $row \Ayeo\Sniffer\ReportRow */
     foreach ($report as $row) {
+        dump($row->getLineNumber());
+        dump(($file->isChanged($row->getLineNumber())));
         if ($file->isChanged($row->getLineNumber())) {
 			echo sprintf("| %s | %s\t| %s\n", $row->getLineNumber(), $row->getType(), $row->getMessage());
         }
