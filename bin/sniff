@@ -1,8 +1,8 @@
 #!/usr/bin/env php
 <?php
-require("./vendor/autoload.php");
+require('./vendor/autoload.php');
 
-$path = __DIR__."/../../../../";
+$path = __DIR__ . '/../../../../';
 $exit = 0;
 
 $commitSHA = substr(`cd $path && git rev-parse HEAD`, 0, 8);
@@ -10,9 +10,10 @@ dump($commitSHA);
 
 $finder = new Ayeo\Sniffer\ChangedFilesFinder($path);
 $files = $finder->findAll($commitSHA);
-dump($files);
+//dump($files);
 
-$sniffer = new \Ayeo\Sniffer\Sniffer($path."/phpcs.xml");
+$sniffer = new Ayeo\Sniffer\Sniffer($path, $path . '/phpcs.xml');
+//dump($sniffer);
 
 /* @var $file \Ayeo\Sniffer\File */
 foreach ($files as $file) {
@@ -24,7 +25,7 @@ foreach ($files as $file) {
         dump($row->getLineNumber());
         dump(($file->isChanged($row->getLineNumber())));
         if ($file->isChanged($row->getLineNumber())) {
-			echo sprintf("| %s | %s\t| %s\n", $row->getLineNumber(), $row->getType(), $row->getMessage());
+            echo sprintf("| %s | %s\t| %s\n", $row->getLineNumber(), $row->getType(), $row->getMessage());
         }
     }
 }
