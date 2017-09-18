@@ -1,4 +1,5 @@
 <?php
+
 namespace Ayeo\Sniffer;
 
 class File
